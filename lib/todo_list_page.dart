@@ -8,6 +8,11 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
+
+  TextEditingController _textEditingController = TextEditingController();
+
+  List<String> tarefas = [];
+
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +23,57 @@ class _TodoListPageState extends State<TodoListPage> {
         padding: EdgeInsets.all(24),
         child: Column(
           children: [
-            TextField(),
+            TextField(
+              controller: _textEditingController,
+            ),
+            Container(
+              height: 400,
+              child: ListView.separated(
+                separatorBuilder: (context, index) => Divider(),
+                itemCount: tarefas.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(tarefas[index]),
+                    onLongPress: () {
+                      setState(() {
+                        tarefas.removeAt(index);
+                      });
+                    },
+
+                  );
+                },
+              ),
+            ),
           ],
         ),
+      ),
+      floatingActionButton: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.blueAccent,
+            onPressed: () {
+              if (_textEditingController.text.length > 0){
+                setState(() {
+                  tarefas.add(_textEditingController.text);
+                });
+                _textEditingController.clear();
+              }
+            },
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            backgroundColor: Colors.blueAccent,
+            onPressed: () {
+              setState(() {
+                tarefas = [];
+              });
+              _textEditingController.clear();
+            },
+            child: Icon(Icons.delete),
+          ),
+        ],
       ),
     );
   }
